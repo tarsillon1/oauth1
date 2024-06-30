@@ -34,6 +34,8 @@ type Config struct {
 	Noncer Noncer
 	// HTTPClient overrides the choice of http.DefaultClient for RequestToken and AccessToken
 	HTTPClient *http.Client
+	// HTTPMethod overrides the HTTP method used for RequestToken and AccessToken.
+	HTTPMethod string
 }
 
 // NewConfig returns a new Config with the given consumer key and secret.
@@ -66,7 +68,11 @@ func NewClient(ctx context.Context, config *Config, token *Token) *http.Client {
 // (temporary credentials).
 // See RFC 5849 2.1 Temporary Credentials.
 func (c *Config) RequestToken() (requestToken, requestSecret string, err error) {
-	req, err := http.NewRequest("POST", c.Endpoint.RequestTokenURL, nil)
+	method := c.HTTPMethod
+	if method == "" {
+		method = "POST"
+	}
+	req, err := http.NewRequest(method, c.Endpoint.RequestTokenURL, nil)
 	if err != nil {
 		return "", "", err
 	}
@@ -145,7 +151,11 @@ func ParseAuthorizationCallback(req *http.Request) (requestToken, verifier strin
 // credentials).
 // See RFC 5849 2.3 Token Credentials.
 func (c *Config) AccessToken(requestToken, requestSecret, verifier string) (accessToken, accessSecret string, err error) {
-	req, err := http.NewRequest("POST", c.Endpoint.AccessTokenURL, nil)
+	method := c.HTTPMethod
+	if method == "" {
+		method = "POST"
+	}
+	req, err := http.NewRequest(method, c.Endpoint.AccessTokenURL, nil)
 	if err != nil {
 		return "", "", err
 	}
