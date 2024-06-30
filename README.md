@@ -1,6 +1,7 @@
 # OAuth1
-[![GoDoc](https://pkg.go.dev/badge/github.com/dghubble/oauth1.svg)](https://pkg.go.dev/github.com/dghubble/oauth1)
-[![Workflow](https://github.com/dghubble/oauth1/actions/workflows/test.yaml/badge.svg)](https://github.com/dghubble/oauth1/actions/workflows/test.yaml?query=branch%3Amain)
+
+[![GoDoc](https://pkg.go.dev/badge/github.com/tarsillon1/oauth1.svg)](https://pkg.go.dev/github.com/tarsillon1/oauth1)
+[![Workflow](https://github.com/tarsillon1/oauth1/actions/workflows/test.yaml/badge.svg)](https://github.com/tarsillon1/oauth1/actions/workflows/test.yaml?query=branch%3Amain)
 [![Sponsors](https://img.shields.io/github/sponsors/dghubble?logo=github)](https://github.com/sponsors/dghubble)
 [![Mastodon](https://img.shields.io/badge/follow-news-6364ff?logo=mastodon)](https://fosstodon.org/@typhoon)
 
@@ -13,12 +14,12 @@ Package `oauth1` provides a Go implementation of the [OAuth 1 spec](https://tool
 ## Install
 
 ```
-go get github.com/dghubble/oauth1
+go get github.com/tarsillon1/oauth1
 ```
 
 ## Docs
 
-Read [GoDoc](https://godoc.org/github.com/dghubble/oauth1)
+Read [GoDoc](https://godoc.org/github.com/tarsillon1/oauth1)
 
 ## Usage
 
@@ -28,9 +29,9 @@ To implement "Login with X", use the [gologin](https://github.com/dghubble/golog
 
 To call the Twitter, Digits, or Tumblr OAuth1 APIs, use the higher level Go API clients.
 
-* [Twitter](https://github.com/dghubble/go-twitter)
-* [Digits](https://github.com/dghubble/go-digits)
-* [Tumblr](https://github.com/benfb/go-tumblr)
+- [Twitter](https://github.com/dghubble/go-twitter)
+- [Digits](https://github.com/dghubble/go-digits)
+- [Tumblr](https://github.com/benfb/go-tumblr)
 
 ### Authorization Flow
 
@@ -38,8 +39,8 @@ Perform the OAuth 1 authorization flow to ask a user to grant an application acc
 
 ```go
 import (
-    "github.com/dghubble/oauth1"
-    "github.com/dghubble/oauth1/twitter"
+    "github.com/tarsillon1/oauth1"
+    "github.com/tarsillon1/oauth1/twitter"
 )
 ...
 
@@ -53,33 +54,33 @@ config := oauth1.Config{
 
 1. When a user performs an action (e.g. "Login with X" button calls "/login" route) get an OAuth1 request token (temporary credentials).
 
-    ```go
-    requestToken, requestSecret, err = config.RequestToken()
-    // handle err
-    ```
+   ```go
+   requestToken, requestSecret, err = config.RequestToken()
+   // handle err
+   ```
 
 2. Obtain authorization from the user by redirecting them to the OAuth1 provider's authorization URL to grant the application access.
 
-    ```go
-    authorizationURL, err := config.AuthorizationURL(requestToken)
-    // handle err
-    http.Redirect(w, req, authorizationURL.String(), http.StatusFound)
-    ```
+   ```go
+   authorizationURL, err := config.AuthorizationURL(requestToken)
+   // handle err
+   http.Redirect(w, req, authorizationURL.String(), http.StatusFound)
+   ```
 
-    Receive the callback from the OAuth1 provider in a handler.
+   Receive the callback from the OAuth1 provider in a handler.
 
-    ```go
-    requestToken, verifier, err := oauth1.ParseAuthorizationCallback(req)
-    // handle err
-    ```
+   ```go
+   requestToken, verifier, err := oauth1.ParseAuthorizationCallback(req)
+   // handle err
+   ```
 
 3. Acquire the access token (token credentials) which can later be used to make requests on behalf of the user.
 
-    ```go
-    accessToken, accessSecret, err := config.AccessToken(requestToken, requestSecret, verifier)
-    // handle error
-    token := oauth1.NewToken(accessToken, accessSecret)
-    ```
+   ```go
+   accessToken, accessSecret, err := config.AccessToken(requestToken, requestSecret, verifier)
+   // handle error
+   token := oauth1.NewToken(accessToken, accessSecret)
+   ```
 
 Check the [examples](examples) to see this authorization flow in action from the command line, with Twitter PIN-based login and Tumblr login.
 
@@ -89,7 +90,7 @@ Use an access `Token` to make authorized requests on behalf of a user.
 
 ```go
 import (
-    "github.com/dghubble/oauth1"
+    "github.com/tarsillon1/oauth1"
 )
 
 func main() {

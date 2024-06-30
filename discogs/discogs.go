@@ -2,7 +2,7 @@
 package discogs
 
 import (
-	"github.com/dghubble/oauth1"
+	"github.com/tarsillon1/oauth1"
 )
 
 // Endpoint is Discogs's OAuth 1.0a endpoint.

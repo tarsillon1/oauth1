@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/dghubble/go-twitter/twitter"
-	"github.com/dghubble/oauth1"
+	"github.com/tarsillon1/oauth1"
 )
 
 // Twitter user-auth requests with an Access Token (token credential)
