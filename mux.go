@@ -26,6 +26,7 @@ func (a *ServeMuxConfig) setDefaults() {
 type ServeMux struct {
 	*http.ServeMux
 	*ServeMuxConfig
+	requestToken  string
 	requestSecret string
 	token         *Token
 	gotTokenAt    time.Time
@@ -59,10 +60,21 @@ func (s *ServeMux) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *ServeMux) callback(w http.ResponseWriter, r *http.Request) {
-	requestToken, verifier, err := ParseAuthorizationCallback(r)
+	// parse the raw query from the URL into req.Form
+	err := r.ParseForm()
 	if err != nil {
 		w.WriteHeader(500)
-		fmt.Printf("failed to parse authorization: %e\n", err)
+		fmt.Printf("failed to parse form: %e\n", err)
+		return
+	}
+	requestToken := r.Form.Get(oauthTokenParam)
+	if requestToken == "" {
+		requestToken = s.requestToken
+	}
+	verifier := r.Form.Get(oauthVerifierParam)
+
+	if requestToken == "" || verifier == "" {
+		w.WriteHeader(400)
 		return
 	}
 
@@ -88,6 +100,7 @@ func (s *ServeMux) authorize() (*url.URL, error) {
 	if err != nil {
 		return nil, err
 	}
+	s.requestToken = requestToken
 	s.requestSecret = requestSecret
 	return s.AuthorizationURL(requestToken)
 }
