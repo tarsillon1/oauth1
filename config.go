@@ -36,6 +36,8 @@ type Config struct {
 	HTTPClient *http.Client
 	// HTTPMethod overrides the HTTP method used for RequestToken and AccessToken.
 	HTTPMethod string
+	// AuthorizationOAuthTokenParam is the name of the OAuth token parameter for the authorize URL.
+	AuthorizationOAuthTokenParam string
 }
 
 // NewConfig returns a new Config with the given consumer key and secret.
@@ -121,7 +123,13 @@ func (c *Config) AuthorizationURL(requestToken string) (*url.URL, error) {
 		return nil, err
 	}
 	values := authorizationURL.Query()
+
+	oauthTokenParam := oauthTokenParam
+	if c.AuthorizationOAuthTokenParam != "" {
+		oauthTokenParam = c.AuthorizationOAuthTokenParam
+	}
 	values.Add(oauthTokenParam, requestToken)
+
 	authorizationURL.RawQuery = values.Encode()
 	return authorizationURL, nil
 }
